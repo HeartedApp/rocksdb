@@ -393,14 +393,18 @@ struct DBOptions {
   // Default: true
   bool paranoid_checks = true;
 
-  // If true, the log numbers and sizes of the synced WALs are tracked
-  // in MANIFEST, then during DB recovery, if a synced WAL is missing
-  // from disk, or the WAL's size does not match the recorded size in
-  // MANIFEST, an error will be reported and the recovery will be aborted.
+  // If true, track WALs in MANIFEST and verify them on recovery.
   //
-  // Note that this option does not work with secondary instance.
+  // If a WAL is tracked in MANIFEST but is missing from disk on recovery,
+  // or the size of the tracked WAL is larger than the WAL's on-disk size,
+  // an error is reported and recovery is aborted.
+  //
+  // If a WAL is not tracked in MANIFEST, then no verification will happen
+  // during recovery.
   //
   // Default: false
+  // FIXME(cheng): This option is part of a work in progress and does not yet
+  // work
   bool track_and_verify_wals_in_manifest = false;
 
   // Use the specified object to interact with the environment,
